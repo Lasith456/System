@@ -10,3 +10,5 @@ npm run dev
 
 in production mode
 npm run start
+
+Login Credintials:- email-lcviduranga456@gmail.com  password- Lasith123
