@@ -1,26 +1,15 @@
-import mongoose from "mongoose";
-const userSchema=new mongoose.Schema({
-    email:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    name:{
-        type:String,
-        required:true,
-    },
-    lastLogin:{
-        type:Date,
-        default:Date.now,
-    },
-    isVerified:{
-        type:Boolean,
-        default:false
-    },
-    isAdmin:{
-        type:Boolean,
-        default:false
-    },
-},{timestamps:true});
+import mongoose from 'mongoose';
 
-export const User = mongoose.model('User',userSchema);
+const TicketSchema = new mongoose.Schema({
+  ticketID: { type: String, required: true, unique: true },
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  text: { type: String, required: true },
+  email: { type: String, required: true },
+  ticketHeader: { type: String },
+  prediction: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Ticket = mongoose.model('Ticket', TicketSchema);
+
+export default Ticket;
