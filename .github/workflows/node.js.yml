@@ -49,5 +49,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp # Can be changed to `sftp` if using secure FTP
           local-dir: ./frontend/build # Adjust to the directory of your frontend build output
-          server-dir: /path/to/frontend/on/server # Replace with your desired path on the server
+          server-dir: ./ # Replace with your desired path on the server
 
