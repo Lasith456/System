@@ -1,67 +1,94 @@
-import { mailtrapClient,sender } from "./mailtrap.config.js";
-import { VERIFICATION_EMAIL_TEMPLATE ,SUCCESSFUL_VERIFICATION_EMAIL_TEMPLATE,PASSWORD_RESET_REQUEST_TEMPLATE,PASSWORD_RESET_SUCCESS_TEMPLATE} from "./emailTemplate.js";
-export const sendVerificationEmail= async(email,verificationToken,user)=>{
-const reciptient=[{email}];
-try {
-    const response=await mailtrapClient.send({
-        from:sender,
-        to:reciptient,
-        subject:"Verify Your Email",
-        html: VERIFICATION_EMAIL_TEMPLATE.replace('{verificationCode}',verificationToken).replace('{user}', user),
-        category:"Email Verification"
-    })
-    console.log("email sent succefully",response)
-} catch (error) {
-    console.error("Error sending verificatio mail",error);
-    throw new Error("Error sending mail",error)
-}
-}
-export const sendWelcomeEmail= async(email,name)=>{
-    const reciptient=[{email}];
-try {
-    const response=await mailtrapClient.send({
-        from:sender,
-        to:reciptient,
-        subject:"Successful Verified Your Email",
-        html: SUCCESSFUL_VERIFICATION_EMAIL_TEMPLATE.replace('{user}', name),
-        category:"Welcome Email Verification"
-    })
-    console.log("email sent succefully",response)
-} catch (error) {
-    console.error("Error sending welcome mail",error);
-    throw new Error("Error sending welcome mail",error)
-}
-}
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import { VERIFICATION_EMAIL_TEMPLATE, SUCCESSFUL_VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE } from "./emailTemplate.js";
 
-export const sendPasswordResetEmail=async(email,resetURL,user)=>{
-    const recipient=[{email}];
-    try {
-        const response=await mailtrapClient.send({
-            from:sender,
-            to:recipient,
-            subject:"Reset Your Password",
-            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}",resetURL).replace('{user}', user),
-            category: "password Reset"
-        })
-    } catch (error) {
-        console.error('error Sending Password reset email',error)
-        throw new Error('error sending password reset email ',error)
-    }
-}
+dotenv.config();
 
-export const sendResetSuccessEmail= async(email,user)=>{
-    const recipient=[{email}];
-    try {
-        const response=await mailtrapClient.send({
-            from:sender,
-            to:recipient,
-            subject:"Password Reset Successfully",
-            html: PASSWORD_RESET_SUCCESS_TEMPLATE.replace('{user}', user),
-            category: "password Reset"
-        })
-        console.log("Password Reset Successful",response)
-    } catch (error) {
-        console.error('error Sending Password reset email',error)
-        throw new Error('error sending password reset email ',error)
-    }
-}
+// Configure the SMTP transporter
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST, // SMTP server (e.g., 'smtp.yourdomain.com')
+  port: process.env.SMTP_PORT, // SMTP port (e.g., 587)
+  secure: process.env.SMTP_SECURE === "true", // true for 465, false for 587
+  auth: {
+    user: process.env.SMTP_USER, // Your SMTP username
+    pass: process.env.SMTP_PASS, // Your SMTP password
+  },
+});
+
+// Sender information
+const sender = {
+  email: "info@navicodes.com",
+  name: "Lasith Chamika Viduranga",
+};
+
+// Send Verification Email
+export const sendVerificationEmail = async (email, verificationToken, user) => {
+  const mailOptions = {
+    from: `"${sender.name}" <${sender.email}>`,
+    to: email,
+    subject: "Verify Your Email",
+    html: VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken).replace("{user}", user),
+  };
+
+  try {
+    const response = await transporter.sendMail(mailOptions);
+    console.log("Verification email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending verification email", error);
+    throw new Error("Error sending verification email");
+  }
+};
+
+// Send Welcome Email
+export const sendWelcomeEmail = async (email, name) => {
+  const mailOptions = {
+    from: `"${sender.name}" <${sender.email}>`,
+    to: email,
+    subject: "Successful Verification of Your Email",
+    html: SUCCESSFUL_VERIFICATION_EMAIL_TEMPLATE.replace("{user}", name),
+  };
+
+  try {
+    const response = await transporter.sendMail(mailOptions);
+    console.log("Welcome email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending welcome email", error);
+    throw new Error("Error sending welcome email");
+  }
+};
+
+// Send Password Reset Email
+export const sendPasswordResetEmail = async (email, resetURL, user) => {
+  const mailOptions = {
+    from: `"${sender.name}" <${sender.email}>`,
+    to: email,
+    subject: "Reset Your Password",
+    html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL).replace("{user}", user),
+  };
+
+  try {
+    const response = await transporter.sendMail(mailOptions);
+    console.log("Password reset email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending password reset email", error);
+    throw new Error("Error sending password reset email");
+  }
+};
+
+// Send Reset Success Email
+export const sendResetSuccessEmail = async (email, user) => {
+  const mailOptions = {
+    from: `"${sender.name}" <${sender.email}>`,
+    to: email,
+    subject: "Password Reset Successfully",
+    html: PASSWORD_RESET_SUCCESS_TEMPLATE.replace("{user}", user),
+  };
+
+  try {
+    const response = await transporter.sendMail(mailOptions);
+    console.log("Password reset success email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending password reset success email", error);
+    throw new Error("Error sending password reset success email");
+  }
+};
