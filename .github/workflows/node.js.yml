@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
-          local-dir: ./frontend/build/ # Make sure the path ends with a slash
+          local-dir: ./frontend/ # Make sure the path ends with a slash
           server-dir: /public_html/university.navicodes.com/frontend/
 
 
