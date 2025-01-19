@@ -28,6 +28,24 @@ const ProtectedRoute = ({ children }) => {
 
   return children;
 };
+// Admin protected Routes
+const AdminProtectedRoute = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  if (user.role !== "admin" && user.role !== "staff") {
+    return <Navigate to="/dashboard" replace />; // Redirect non-admin users
+  }
+
+  return children;
+};
 
 // Redirect authenticated users to the home page or dashboard
 const RedirectAuthenticatedUser = ({ children }) => {
@@ -101,9 +119,9 @@ export default function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <HomePage />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route

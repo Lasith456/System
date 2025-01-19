@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
-
 function Navbar() {
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -29,6 +28,12 @@ function Navbar() {
         <a href="/submitTicket" className="text-white hover:text-gray-300">
           Ticket
         </a>
+
+        {user.role === "admin" && (
+          <a href="/signTicket" className="text-white hover:text-gray-300">
+            Assigned Ticket
+          </a>
+        )}
       </nav>
 
       <div>

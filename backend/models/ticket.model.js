@@ -6,6 +6,7 @@ const TicketSchema = new mongoose.Schema({
   text: { type: String, required: true },
   email: { type: String, required: true },
   ticketHeader: { type: String },
+  status:  {type:String,default:'Sent',enum:['Sent','Open','InProgress','Hold','Resolved','Canceled']},
   prediction: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
