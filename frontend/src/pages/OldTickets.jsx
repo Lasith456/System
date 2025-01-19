@@ -61,6 +61,9 @@ function TicketHistory() {
                   <h3 className="text-lg font-semibold">
                     {ticket.ticketHeader}
                   </h3>
+                  <p className="text-sm text-gray-400">
+                    Status: {ticket.status}
+                  </p>
                   <p className="text-sm text-gray-400">ID: {ticket.ticketID}</p>
                 </li>
               ))}
@@ -81,6 +84,9 @@ function TicketHistory() {
             <h2 className="mb-4 text-lg font-semibold text-gray-300">
               {selectedTicket.ticketHeader}
             </h2>
+            <p className="mb-2 text-gray-400">
+              <strong>Status:</strong> {selectedTicket.status}
+            </p>
             <p className="mb-2 text-gray-400">
               <strong>Ticket ID:</strong> {selectedTicket.ticketID}
             </p>

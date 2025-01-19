@@ -25,6 +25,12 @@ const userSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    role:{
+        type:String,
+        required:true,
+        enum:['admin','student','staff'],
+        default:'student'
+     },
     resetPasswordToken:String,
     resetPasswordExpiresAt:Date,
     verificationToken:String,

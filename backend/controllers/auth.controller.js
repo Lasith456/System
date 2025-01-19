@@ -60,6 +60,7 @@ export const login = async (req,res)=>{
             user:{
                 ...user._doc,
                 password:undefined,
+                role: user.role,
             },
         })
     } catch (error) {
