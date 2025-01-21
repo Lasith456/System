@@ -13,6 +13,7 @@ import AssignedTicket from "./pages/AssignedTicket";
 import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import TicketPage from "./pages/TicketPage";
+import Department from "./pages/Department";
 
 // Protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -40,13 +41,29 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/verify-email" replace />;
   }
 
-  if (user.role !== "admin" && user.role !== "staff") {
+  if (user.role !== "admin") {
     return <Navigate to="/dashboard" replace />; // Redirect non-admin users
   }
 
   return children;
 };
+const StaffProtectedRoute = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
 
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  if (user.role !== "admin" && user.role !== "staff") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
 // Redirect authenticated users to the home page or dashboard
 const RedirectAuthenticatedUser = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -115,12 +132,20 @@ export default function App() {
             </RedirectAuthenticatedUser>
           }
         />
-        {/* Admin route for authenticated admin users */}
+
         <Route
           path="/signTicket"
           element={
-            <AdminProtectedRoute>
+            <StaffProtectedRoute>
               <AssignedTicket />
+            </StaffProtectedRoute>
+          }
+        />
+        <Route
+          path="/department"
+          element={
+            <AdminProtectedRoute>
+              <Department />
             </AdminProtectedRoute>
           }
         />

@@ -29,9 +29,14 @@ function Navbar() {
           Ticket
         </a>
 
-        {user.role === "admin" && (
+        {(user.role === "staff" || user.role === "admin") && (
           <a href="/signTicket" className="text-white hover:text-gray-300">
             Assigned Ticket
+          </a>
+        )}
+        {user.role === "admin" && (
+          <a href="/department" className="text-white hover:text-gray-300">
+            Department
           </a>
         )}
       </nav>
