@@ -9,7 +9,7 @@ import EmailVerificationPage from "./pages/EmailVerificationPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import LoadingSpinner from "./components/LoadingSpinner";
-
+import AssignedTicket from "./pages/AssignedTicket";
 import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import TicketPage from "./pages/TicketPage";
@@ -117,10 +117,10 @@ export default function App() {
         />
         {/* Admin route for authenticated admin users */}
         <Route
-          path="/admin"
+          path="/signTicket"
           element={
             <AdminProtectedRoute>
-              <HomePage />
+              <AssignedTicket />
             </AdminProtectedRoute>
           }
         />
