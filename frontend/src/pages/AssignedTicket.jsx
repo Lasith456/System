@@ -1,6 +1,6 @@
 import Navbar from "../components/NavigationBar";
-// import TicketHistory from "./OldTickets";
-// import TicketForm from "./TicketForm";
+import AdminAssignedTicket from "./adminAssignedTicket";
+import AdminCompletedTicket from "./AdminCompletedTickket";
 import { motion } from "framer-motion";
 function TicketPage() {
   return (
@@ -15,12 +15,12 @@ function TicketPage() {
         <div className="flex w-full h-full space-x-4">
           {/* Column 1 */}
           <div className="flex flex-col items-center justify-center w-1/2 p-6 rounded-xl">
-            <h1>Test</h1>
+            <AdminAssignedTicket />
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col items-center justify-center w-1/2 p-6 rounded-xl">
-            <h2>Test</h2>
+            <AdminCompletedTicket />
           </div>
         </div>
       </motion.div>
