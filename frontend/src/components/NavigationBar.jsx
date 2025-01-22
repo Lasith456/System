@@ -39,6 +39,11 @@ function Navbar() {
             Department
           </a>
         )}
+        {user.role === "admin" && (
+          <a href="/adminTickets" className="text-white hover:text-gray-300">
+            Tickets Edit
+          </a>
+        )}
       </nav>
 
       <div>
