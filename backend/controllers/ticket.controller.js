@@ -90,3 +90,44 @@ export const getUserTickets = async (req, res) => {
 	  return res.status(500).json({ success: false, message: 'Server error' });
 	}
   };
+  export const getAllTickets = async (req, res) => {
+    try {
+      // Fetch all tickets from the database
+      const tickets = await Ticket.find();
+  
+      // Check if tickets exist
+      if (!tickets || tickets.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No tickets found.',
+        });
+      }
+      const formattedTickets = tickets.map((ticket) => ({
+        _id: ticket._id,
+        title: ticket.ticketID,
+        description: ticket.text,
+      }));
+      // Return success response with tickets
+      return res.status(200).json({
+        success: true,
+        tickets:formattedTickets,
+      });
+    } catch (error) {
+      // Log error to console
+      console.error('Error fetching tickets:', error);
+  
+      // Return server error response
+      return res.status(500).json({
+        success: false,
+        message: 'Server error',
+      });
+    }
+  };
+  export const deleteTicket = async (req, res) => {
+    try {
+      await Ticket.findByIdAndDelete(req.params.id);
+      return  res.json({ message: "Ticket deleted" });
+  } catch (error) {
+      res.status(400).json({ message:error.message});
+  }
+  };

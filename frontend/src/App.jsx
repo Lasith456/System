@@ -14,6 +14,7 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import TicketPage from "./pages/TicketPage";
 import Department from "./pages/Department";
+import AdminTickets from "./pages/AdminTickets";
 
 // Protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -146,6 +147,14 @@ export default function App() {
           element={
             <AdminProtectedRoute>
               <Department />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/adminTickets"
+          element={
+            <AdminProtectedRoute>
+              <AdminTickets />
             </AdminProtectedRoute>
           }
         />

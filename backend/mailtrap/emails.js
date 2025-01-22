@@ -6,12 +6,12 @@ dotenv.config();
 
 // Configure the SMTP transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST, // SMTP server (e.g., 'smtp.yourdomain.com')
-  port: process.env.SMTP_PORT, // SMTP port (e.g., 587)
+  host: process.env.SMTP_HOST, // SMTP server 
+  port: process.env.SMTP_PORT, // SMTP port 
   secure: process.env.SMTP_SECURE === "true", // true for 465, false for 587
   auth: {
-    user: process.env.SMTP_USER, // Your SMTP username
-    pass: process.env.SMTP_PASS, // Your SMTP password
+    user: process.env.SMTP_USER, //SMTP username
+    pass: process.env.SMTP_PASS, //SMTP password
   },
 });
 
