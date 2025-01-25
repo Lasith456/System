@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import TicketPage from "./pages/TicketPage";
 import Department from "./pages/Department";
 import AdminTickets from "./pages/AdminTickets";
+import AboutPage from "./pages/AboutPage";
 
 // Protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -113,6 +114,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DashBoardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <AboutPage />
             </ProtectedRoute>
           }
         />

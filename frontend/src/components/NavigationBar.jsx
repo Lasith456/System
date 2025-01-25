@@ -22,9 +22,7 @@ function Navbar() {
         <a href="/about" className="text-white hover:text-gray-300">
           About
         </a>
-        <a href="/services" className="text-white hover:text-gray-300">
-          Services
-        </a>
+
         <a href="/submitTicket" className="text-white hover:text-gray-300">
           Ticket
         </a>
