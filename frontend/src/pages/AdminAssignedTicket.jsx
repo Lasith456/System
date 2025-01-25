@@ -40,7 +40,7 @@ function AdminAssignedTicket() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center w-full h-full p-4 overflow-hidden bg-gray-800 bg-opacity-50 shadow-xl rounded-2xl backdrop-filter backdrop-blur-xl"
+      className="flex flex-col items-center justify-center w-full h-full p-4 overflow-hidden bg-opacity-50 shadow-xl rounded-2xl backdrop-filter backdrop-blur-xl"
     >
       <div className="w-full text-gray-300">
         {/* Static Header */}
