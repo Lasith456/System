@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
+import { useAuthStore } from "../store/authStore";
 const API_URL = "http://localhost:3000/";
 
 function AdminAssignedTicket() {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const { user } = useAuthStore();
 
   // Fetch tickets from the server
   useEffect(() => {
@@ -23,16 +24,41 @@ function AdminAssignedTicket() {
     fetchTickets();
   }, []);
 
-  // Handle ticket click to show details in popup
-  const handleTicketClick = (ticket) => {
-    setSelectedTicket(ticket);
-    setIsPopupVisible(true);
-  };
-
-  // Close the popup
   const closePopup = () => {
     setIsPopupVisible(false);
     setSelectedTicket(null);
+  };
+
+  const handleOpenTicket = async (ticket) => {
+    try {
+      setSelectedTicket(ticket);
+      setIsPopupVisible(true);
+      await axios.post(`${API_URL}ticket/update_status`, {
+        _id: ticket._id,
+        status: "opened",
+      });
+      console.log(`Ticket ${ticket.ticketID} status updated to opened.`);
+    } catch (error) {
+      console.error("Error updating ticket status:", error);
+    }
+  };
+
+  const handleAssignTicket = async (ticket) => {
+    try {
+      const userEmail = user.email;
+      await axios.post(`${API_URL}ticket/assign`, {
+        ticketID: ticket.ticketID,
+        email: userEmail,
+      });
+      console.log(`Ticket ${ticket.ticketID} assigned to ${userEmail}.`);
+      setTickets((prevTickets) =>
+        prevTickets.map((t) =>
+          t.ticketID === ticket.ticketID ? { ...t, assignedTo: userEmail } : t
+        )
+      );
+    } catch (error) {
+      console.error("Error assigning ticket:", error);
+    }
   };
 
   return (
@@ -55,8 +81,7 @@ function AdminAssignedTicket() {
               {tickets.map((ticket) => (
                 <li
                   key={ticket.ticketID}
-                  className="p-4 bg-gray-700 rounded-lg shadow cursor-pointer hover:bg-gray-600"
-                  onClick={() => handleTicketClick(ticket)}
+                  className="p-4 bg-gray-700 rounded-lg shadow cursor-pointer "
                 >
                   <h3 className="text-lg font-semibold">
                     {ticket.ticketHeader}
@@ -65,6 +90,24 @@ function AdminAssignedTicket() {
                     Status: {ticket.status}
                   </p>
                   <p className="text-sm text-gray-400">ID: {ticket.ticketID}</p>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleOpenTicket(ticket)}
+                      className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      Show
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleAssignTicket(ticket)}
+                      className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      Assign for me
+                    </motion.button>
+                  </div>
                 </li>
               ))}
             </ul>

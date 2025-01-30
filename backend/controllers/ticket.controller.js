@@ -131,3 +131,21 @@ export const getUserTickets = async (req, res) => {
       res.status(400).json({ message:error.message});
   }
   };
+  export const updateTicket = async (req, res) => {
+    try {
+      const { _id } = req.body;
+
+      const ticket = await Ticket.findById(_id);
+
+      if (!ticket) {
+        return res.status(404).json({ message: "Ticket not found" });
+            }
+      ticket.status = "Opened";
+      await ticket.save();
+  
+      return res.json({ message: "Ticket status updated to 'opened'", ticket });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+  
