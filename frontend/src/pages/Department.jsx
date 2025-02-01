@@ -24,9 +24,10 @@ function Department() {
   const fetchDepartments = async () => {
     try {
       const response = await axios.get(`${API_URL}api/departments`);
-      setDepartments(response.data);
+      setDepartments(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching departments:", error);
+      setDepartments([]);
     }
   };
 
@@ -67,7 +68,7 @@ function Department() {
   const deleteDepartment = async (id) => {
     try {
       await axios.delete(`${API_URL}api/departments/${id}`);
-      setDepartments(departments.filter((department) => department.id !== id));
+      setDepartments(departments.filter((department) => department._id !== id));
       console.log(`Deleted department with ID: ${id}`);
     } catch (error) {
       console.error("Error deleting department:", error);
@@ -163,7 +164,7 @@ function Department() {
             <ul className="space-y-4">
               {currentDepartments.map((department) => (
                 <li
-                  key={department.id}
+                  key={department._id}
                   className="flex items-center justify-between p-4 bg-gray-700 rounded-lg shadow"
                 >
                   <div>
@@ -240,22 +241,14 @@ function Department() {
               {isEditMode ? "Edit Department" : "Add New Department"}
             </h2>
             <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label
-                  htmlFor="departmentName"
-                  className="block mb-2 text-sm text-gray-300"
-                >
-                  Department Name
-                </label>
-                <input
-                  id="departmentName"
-                  type="text"
-                  value={newDepartment}
-                  onChange={(e) => setNewDepartment(e.target.value)}
-                  className="w-full px-3 py-2 text-gray-900 rounded focus:outline-none"
-                  placeholder="Enter department name"
-                />
-              </div>
+              <input
+                type="text"
+                value={newDepartment}
+                onChange={(e) => setNewDepartment(e.target.value)}
+                className="w-full px-3 py-2 mb-4 text-gray-900 rounded focus:outline-none"
+                placeholder="Enter department name"
+              />
+
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"

@@ -13,7 +13,7 @@ function UserManagement() {
   const [newUserData, setNewUserData] = useState({
     name: "",
     department: "",
-    role: "",
+    role: "student",
   });
   const [currentUserId, setCurrentUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,18 +28,20 @@ function UserManagement() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${API_URL}api/users`);
-      setUsers(response.data);
+      setUsers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching users:", error);
+      setUsers([]); // Ensure users is always an array
     }
   };
 
   const fetchDepartments = async () => {
     try {
       const response = await axios.get(`${API_URL}api/departments`);
-      setDepartments(response.data);
+      setDepartments(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching departments:", error);
+      setDepartments([]); // Ensure departments is always an array
     }
   };
 
@@ -67,7 +69,6 @@ function UserManagement() {
     }
   };
 
-  // Delete User
   const deleteUser = async (id) => {
     try {
       await axios.delete(`${API_URL}api/users/${id}`);
@@ -78,13 +79,12 @@ function UserManagement() {
     }
   };
 
-  // Handle Form Submission for Editing User
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (newUserData.role.trim() === "") return;
     updateUser();
     setIsPopupOpen(false);
-    setNewUserData({ name: "", department: "", role: "" });
+    setNewUserData({ name: "", department: "", role: "student" });
     setCurrentUserId(null);
   };
 
@@ -96,21 +96,19 @@ function UserManagement() {
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setNewUserData({ name: "", department: "", role: "" });
+    setNewUserData({ name: "", department: "", role: "student" });
     setCurrentUserId(null);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
   };
 
-  // Filter Users Based on Search
   const filteredUsers = users.filter((user) =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination Logic
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -125,7 +123,6 @@ function UserManagement() {
         transition={{ duration: 0.5 }}
         className="fixed flex flex-col items-start justify-start w-auto h-auto mt-20 overflow-hidden bg-gray-800 bg-opacity-50 shadow-xl top-6 bottom-4 left-4 right-4 rounded-2xl backdrop-filter backdrop-blur-xl"
       >
-        {/* Search Field */}
         <div className="flex items-center px-4 mt-4 space-x-4">
           <input
             type="text"
@@ -136,7 +133,6 @@ function UserManagement() {
           />
         </div>
 
-        {/* User List */}
         <div className="w-full p-4 overflow-y-auto max-h-auto">
           {currentUsers.length === 0 ? (
             <p>No users found.</p>
@@ -187,7 +183,6 @@ function UserManagement() {
         </div>
       </motion.div>
 
-      {/* Popup Box for Editing User */}
       {isPopupOpen && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -198,7 +193,6 @@ function UserManagement() {
           <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
             <h2 className="mb-4 text-lg font-semibold text-white">Edit User</h2>
             <form onSubmit={handleFormSubmit}>
-              {/* Role Selection */}
               <label className="block mb-1 text-gray-300">Role</label>
               <select
                 value={newUserData.role}
@@ -212,7 +206,6 @@ function UserManagement() {
                 <option value="student">Student</option>
               </select>
 
-              {/* Show department selection only for Admin/Staff */}
               {newUserData.role !== "student" && (
                 <>
                   <label className="block mb-1 text-gray-300">Department</label>
