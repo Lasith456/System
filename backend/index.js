@@ -18,6 +18,9 @@ app.use(express.json());
 app.use(cookieParser());
 const PORT= process.env.PORT || 3000;
 app.use("/api/auth",authRoutes)
+app.use('/ticket', ticketRoutes)
+app.use('/api', departmentRoutes)
+app.use('/api', usersRoutes)
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
@@ -25,9 +28,7 @@ if (process.env.NODE_ENV === "production") {
 		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 	});
 }
-app.use('/ticket', ticketRoutes);
-app.use('/api', departmentRoutes);
-app.use('/api', usersRoutes);
+
 
 app.listen(PORT,()=>{
     console.log("Server is running in port ",PORT)
