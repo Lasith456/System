@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 // import { useAuthStore } from "../store/authStore";
 import Navbar from "../components/NavigationBar";
-const API_URL = "http://localhost:3000/";
+const API_URL =
+  import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
 const DashBoardPage = () => {
   // const { user } = useAuthStore();

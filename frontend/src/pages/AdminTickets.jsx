@@ -8,7 +8,8 @@ function TicketList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 4;
-  const API_URL = "http://localhost:3000/";
+  const API_URL =
+    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
   useEffect(() => {
     const fetchTickets = async () => {

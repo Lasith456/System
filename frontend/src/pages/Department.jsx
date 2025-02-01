@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function Department() {
-  const API_URL = "http://localhost:3000/";
+  const API_URL =
+    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
   const [departments, setDepartments] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);

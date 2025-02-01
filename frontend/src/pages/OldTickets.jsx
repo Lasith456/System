@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/";
+const API_URL =
+  import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
 function TicketHistory() {
   const [tickets, setTickets] = useState([]);
