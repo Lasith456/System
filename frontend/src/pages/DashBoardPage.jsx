@@ -1,10 +1,34 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import axios from "axios";
 // import { useAuthStore } from "../store/authStore";
 import Navbar from "../components/NavigationBar";
+const API_URL = "http://localhost:3000/";
 
 const DashBoardPage = () => {
   // const { user } = useAuthStore();
+  const [ticketCounts, setTicketCounts] = useState({
+    completed: 0,
+    pending: 0,
+    rejected: 0,
+  });
 
+  useEffect(() => {
+    const fetchTicketCounts = async () => {
+      try {
+        const response = await axios.get(`${API_URL}ticket/counts`);
+        setTicketCounts({
+          completed: response.data.completed || 0,
+          pending: response.data.pending || 0,
+          rejected: response.data.rejected || 0,
+        });
+      } catch (error) {
+        console.error("Error fetching ticket counts:", error);
+      }
+    };
+
+    fetchTicketCounts();
+  }, []);
   return (
     <div>
       <Navbar />
@@ -24,15 +48,21 @@ const DashBoardPage = () => {
           <div className="my-2">
             <div className="grid w-auto h-auto grid-cols-2 gap-6 p-6">
               <div className="flex items-center justify-center p-6 text-black rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-blue-500 hover:shadow-2xl">
-                <h3 className="text-lg font-bold">Completed Tickets :10</h3>
+                <h3 className="text-lg font-bold">
+                  Completed Tickets: {ticketCounts.completed}
+                </h3>
               </div>
 
               <div className="flex items-center justify-center p-6 text-black rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-blue-500 hover:shadow-2xl">
-                <h3 className="text-lg font-bold">Pending Tickets :9</h3>
+                <h3 className="text-lg font-bold">
+                  Pending Tickets: {ticketCounts.pending}
+                </h3>
               </div>
 
               <div className="flex items-center justify-center p-6 text-black rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-blue-500 hover:shadow-2xl">
-                <h3 className="text-lg font-bold">Rejected Tickets :0</h3>
+                <h3 className="text-lg font-bold">
+                  Rejected Tickets: {ticketCounts.rejected}
+                </h3>
               </div>
 
               <div className="flex items-center justify-center p-6 text-black rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-blue-500 hover:shadow-2xl">

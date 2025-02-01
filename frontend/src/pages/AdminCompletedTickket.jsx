@@ -44,7 +44,7 @@ function TicketHistory() {
     >
       <div className="w-full text-gray-300">
         {/* Static Header */}
-        <h2 className="mb-2 text-xl font-semibold">Completed Ticket</h2>
+        <h2 className="mb-2 text-xl font-semibold">Assigned Ticket</h2>
 
         {/* Scrollable Tickets */}
         <div className="overflow-y-auto max-h-80">

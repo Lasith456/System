@@ -4,7 +4,7 @@ import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.route.js";
 import ticketRoutes from "./routes/ticket.route.js"
 import departmentRoutes from "./routes/department.route.js"
-
+import usersRoutes from "./routes/users.route.js"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
@@ -27,6 +27,8 @@ if (process.env.NODE_ENV === "production") {
 }
 app.use('/ticket', ticketRoutes);
 app.use('/api', departmentRoutes);
+app.use('/api', usersRoutes);
+
 app.listen(PORT,()=>{
     console.log("Server is running in port ",PORT)
     connectDB();
