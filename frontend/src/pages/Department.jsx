@@ -5,7 +5,7 @@ import axios from "axios";
 
 function Department() {
   const API_URL =
-    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
+    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/api";
 
   const [departments, setDepartments] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -23,7 +23,7 @@ function Department() {
   // Fetch Departments from Backend
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get(`${API_URL}api/departments`);
+      const response = await axios.get(`${API_URL}/departments`);
       setDepartments(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching departments:", error);
