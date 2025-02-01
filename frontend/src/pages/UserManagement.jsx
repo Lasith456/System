@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function UserManagement() {
-  const API_URL = "http://localhost:3000/";
+  const API_URL =
+    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
   const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
