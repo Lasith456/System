@@ -14,6 +14,7 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import TicketPage from "./pages/TicketPage";
 import Department from "./pages/Department";
+import Users from "./pages/UserManagement";
 import AdminTickets from "./pages/AdminTickets";
 import AboutPage from "./pages/AboutPage";
 
@@ -156,6 +157,14 @@ export default function App() {
           element={
             <AdminProtectedRoute>
               <Department />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <AdminProtectedRoute>
+              <Users />
             </AdminProtectedRoute>
           }
         />

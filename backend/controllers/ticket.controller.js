@@ -9,58 +9,76 @@ const generateTicketID = () => {
 export const predictPriority = async (req, res) => {
   try {
     const { text, email, ticketHeader } = req.body;
-    const ticketID = generateTicketID();
-	const token= req.cookies.token;
-	const decoded = jwt.verify(token, process.env.JWT_SECRET);
-	const userID=decoded.userId;
-    if (!text || !email || !userID) {
-      return res.status(400).json({ success: false, message: 'Text, email, and userID are required' });
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized: Token missing" });
     }
 
-    const pythonProcess = spawn('python', ['ml/predict.py', text]);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userID = decoded.userId;
 
-    let prediction = '';
+    if (!text || !email || !userID) {
+      return res.status(400).json({ success: false, message: "Text, email, and userID are required" });
+    }
+
+    const ticketID = generateTicketID();
+
+    const pythonProcess = spawn("python", ["ml/predict.py", text]);
+
+    let output = "";
     let errorOccurred = false;
 
-    pythonProcess.stdout.on('data', (data) => {
-      prediction += data.toString().trim();
+    pythonProcess.stdout.on("data", (data) => {
+      output += data.toString().trim();
     });
 
-    pythonProcess.stderr.on('data', (data) => {
-      console.error(`Error: ${data}`);
+    pythonProcess.stderr.on("data", (data) => {
+      console.error(`Python Error: ${data}`);
       errorOccurred = true;
     });
 
-    pythonProcess.on('close', async (code) => {
-      if (errorOccurred) {
-        return res.status(500).json({ success: false, message: 'Error during prediction' });
+    pythonProcess.on("close", async (code) => {
+
+      if (errorOccurred || !output) {
+        return res.status(500).json({ success: false, message: "Prediction failed, no response from Python" });
       }
 
-      // Save the ticket to the database
       try {
+        const predictionResult = JSON.parse(output);
+
+        if (!predictionResult.priority || !predictionResult.department) {
+          return res.status(500).json({ success: false, message: "Invalid prediction response" });
+        }
+
+        const predictionText = predictionResult.priority;
+
         const newTicket = new Ticket({
-          ticketID,
+          ticketID,  
           userID,
           text,
           email,
           ticketHeader,
-          prediction,
+          priority: predictionResult.priority,
+          department: predictionResult.department,
+          prediction: predictionText, 
         });
 
         await newTicket.save();
 
         return res.status(200).json({
           success: true,
-          message: 'Prediction successful, ticket saved',
+          message: "Prediction successful, ticket saved",
           ticket: newTicket,
         });
-      } catch (dbError) {
-        console.error('Database save error:', dbError);
-        return res.status(500).json({ success: false, message: 'Error saving ticket to database' });
+      } catch (error) {
+        console.error("JSON Parsing Error:", error);
+        return res.status(500).json({ success: false, message: "Failed to parse prediction JSON" });
       }
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error("Prediction error:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 export const getUserTickets = async (req, res) => {
@@ -148,4 +166,39 @@ export const getUserTickets = async (req, res) => {
       res.status(400).json({ message: error.message });
     }
   };
+  export const getCounts=async (req,res)=>{
+    try{
+    const token = req.cookies.token;
+	  if (!token) {
+		return res.status(401).json({ success: false, message: 'Unauthorized - no token provided' });
+	  }
+
+	  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+	const userId=decoded.userId;
   
+
+	  const tickets = await Ticket.find({ userID: userId });
+
+	  if (!tickets || tickets.length === 0) {
+		return res.status(404).json({ success: false, message: 'No tickets found for this user' });
+	  }
+    const completed = tickets.filter(ticket => ticket.status === "Resolved").length;
+    const pending = tickets.filter(ticket => 
+      ticket.status === "Sent" || 
+      ticket.status === "Opened" || 
+      ticket.status === "InProgress" || 
+      ticket.status === "Hold"
+    ).length;
+    const rejected = tickets.filter(ticket => ticket.status === "Canceled").length;
+    
+    return res.status(200).json({
+      success: true,
+      completed,
+      pending,
+      rejected
+    });
+  } catch (error) {
+    console.error("Error in getCounts:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+  }

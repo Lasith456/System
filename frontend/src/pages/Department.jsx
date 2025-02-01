@@ -13,7 +13,7 @@ function Department() {
   const [currentDepartmentId, setCurrentDepartmentId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const departmentsPerPage = 4;
+  const departmentsPerPage = 6;
 
   useEffect(() => {
     fetchDepartments();
@@ -155,7 +155,7 @@ function Department() {
         </div>
 
         {/* Department List */}
-        <div className="w-full p-4 overflow-y-auto max-h-80">
+        <div className="w-full p-4 overflow-y-auto max-h-auto">
           {currentDepartments.length === 0 ? (
             <p>No departments found.</p>
           ) : (

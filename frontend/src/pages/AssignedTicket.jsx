@@ -1,5 +1,5 @@
 import Navbar from "../components/NavigationBar";
-import AdminAssignedTicket from "./adminAssignedTicket";
+import AdminAssignedTicket from "./AdminAssignedTicket";
 import AdminCompletedTicket from "./AdminCompletedTickket";
 import { motion } from "framer-motion";
 function TicketPage() {
