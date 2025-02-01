@@ -5,7 +5,9 @@ import axios from "axios";
 
 function Department() {
   const API_URL =
-    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/api";
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api"
+      : "/api";
 
   const [departments, setDepartments] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
