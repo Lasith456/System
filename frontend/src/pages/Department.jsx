@@ -36,7 +36,7 @@ function Department() {
   // Add New Department
   const addDepartment = async () => {
     try {
-      const response = await axios.post(`${API_URL}api/departments`, {
+      const response = await axios.post(`${API_URL}/departments`, {
         name: newDepartment,
       });
       setDepartments([...departments, response.data]);
@@ -50,7 +50,7 @@ function Department() {
   const updateDepartment = async () => {
     try {
       const response = await axios.put(
-        `${API_URL}api/departments/${currentDepartmentId}`,
+        `${API_URL}/departments/${currentDepartmentId}`,
         { name: newDepartment }
       );
       setDepartments(
@@ -69,7 +69,7 @@ function Department() {
   // Delete Department
   const deleteDepartment = async (id) => {
     try {
-      await axios.delete(`${API_URL}api/departments/${id}`);
+      await axios.delete(`${API_URL}/departments/${id}`);
       setDepartments(departments.filter((department) => department._id !== id));
       console.log(`Deleted department with ID: ${id}`);
     } catch (error) {

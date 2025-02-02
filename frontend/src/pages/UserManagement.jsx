@@ -5,7 +5,9 @@ import axios from "axios";
 
 function UserManagement() {
   const API_URL =
-    import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api"
+      : "/api";
 
   const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -27,7 +29,7 @@ function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${API_URL}api/users`);
+      const response = await axios.get(`${API_URL}/users`);
       setUsers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -37,7 +39,7 @@ function UserManagement() {
 
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get(`${API_URL}api/departments`);
+      const response = await axios.get(`${API_URL}/departments`);
       setDepartments(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching departments:", error);
@@ -54,7 +56,7 @@ function UserManagement() {
       };
 
       const response = await axios.put(
-        `${API_URL}api/users/${currentUserId}`,
+        `${API_URL}/users/${currentUserId}`,
         updatedUserData
       );
 
@@ -71,7 +73,7 @@ function UserManagement() {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`${API_URL}api/users/${id}`);
+      await axios.delete(`${API_URL}/users/${id}`);
       setUsers(users.filter((user) => user._id !== id));
       console.log(`Deleted user with ID: ${id}`);
     } catch (error) {
