@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 const API_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/ticket"
+    : "/ticket";
 
 function AdminAssignedTicket() {
   const [tickets, setTickets] = useState([]);
@@ -15,7 +17,7 @@ function AdminAssignedTicket() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(`${API_URL}ticket/get`); // Adjust the endpoint as necessary
+        const response = await axios.get(`${API_URL}/get`); // Adjust the endpoint as necessary
         setTickets(response.data.tickets || []);
       } catch (error) {
         console.error("Error fetching tickets:", error);
@@ -34,7 +36,7 @@ function AdminAssignedTicket() {
     try {
       setSelectedTicket(ticket);
       setIsPopupVisible(true);
-      await axios.post(`${API_URL}ticket/update_status`, {
+      await axios.post(`${API_URL}/update_status`, {
         _id: ticket._id,
         status: "opened",
       });
@@ -47,7 +49,7 @@ function AdminAssignedTicket() {
   const handleAssignTicket = async (ticket) => {
     try {
       const userEmail = user.email;
-      await axios.post(`${API_URL}ticket/assign`, {
+      await axios.post(`${API_URL}/assign`, {
         ticketID: ticket.ticketID,
         email: userEmail,
       });
