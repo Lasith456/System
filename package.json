@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon backend/index.js",
     "start": "NODE_ENV=production node backend/index.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "pip install joblib && npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
