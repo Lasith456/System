@@ -48,7 +48,11 @@ function Navbar() {
           </a>
         )}
       </nav>
-
+      <div>
+      {(user.role === "staff" || user.role === "admin") && (
+                <h3 className="text-white">You are in {user.role} Dashboard</h3>
+              )}    
+      </div>
       <div>
         <motion.button
           whileHover={{ scale: 1.05 }}

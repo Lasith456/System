@@ -17,13 +17,16 @@ function AdminAssignedTicket() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(`${API_URL}/get`); // Adjust the endpoint as necessary
-        setTickets(response.data.tickets || []);
+  
+        const response = await axios.get(`${API_URL}/get_department_tickets`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+  
+        setTickets(response.data.formattedTickets || []);
       } catch (error) {
-        console.error("Error fetching tickets:", error);
-      }
-    };
-
+        console.error("Error fetching department-specific tickets:", error);
+      };
+    }
     fetchTickets();
   }, []);
 

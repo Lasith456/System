@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useState } from "react"; 
 import FloatingShape from "./components/FloatingShape";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -17,7 +18,7 @@ import Department from "./pages/Department";
 import Users from "./pages/UserManagement";
 import AdminTickets from "./pages/AdminTickets";
 import AboutPage from "./pages/AboutPage";
-
+import Chatbot from "./pages/ChatBot";
 // Protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -80,6 +81,8 @@ const RedirectAuthenticatedUser = ({ children }) => {
 
 export default function App() {
   const { isCheckingAuth, checkAuth } = useAuthStore();
+  const [isChatbotOpen, setChatbotOpen] = useState(false); // ✅ Correct Placement
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -204,6 +207,34 @@ export default function App() {
         {/* Redirect all unmatched routes to the home page */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <button
+        className="fixed bottom-5 right-5 p-4  text-white rounded-full shadow-lg hover:bg-blue-700 transition-all"
+        style={{ background: "#48bb78" }}
+        onMouseEnter={(e) => (e.target.style.background = "#38a169")} 
+        onMouseLeave={(e) => (e.target.style.background = "#48bb78")} 
+        onClick={() => setChatbotOpen(!isChatbotOpen)}
+      >
+        {isChatbotOpen ? (
+          <span className="material-symbols-rounded">close</span>
+        ) : (
+          <span className="material-symbols-rounded">mode_comment</span>
+        )}
+      </button>
+
+      {/* Chatbot Component - Show when open */}
+      {isChatbotOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="w-96 h-[500px] rounded-lg shadow-lg p-4 relative">
+      <button
+        className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
+        onClick={() => setChatbotOpen(false)}
+      >
+        <span className="material-symbols-rounded text-2xl">close</span>
+      </button>
+      <Chatbot setChatbotOpen={setChatbotOpen} />
+    </div>
+  </div>
+)}
       <Toaster />
     </div>
   );
