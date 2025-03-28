@@ -150,14 +150,14 @@ export const getUserTickets = async (req, res) => {
   };
   export const updateTicket = async (req, res) => {
     try {
-      const { _id } = req.body;
+      const { _id,status } = req.body;
 
       const ticket = await Ticket.findById(_id);
 
       if (!ticket) {
         return res.status(404).json({ message: "Ticket not found" });
             }
-      ticket.status = "Opened";
+      ticket.status = status;
       await ticket.save();
   
       return res.json({ message: "Ticket status updated to 'opened'", ticket });
@@ -189,7 +189,6 @@ export const getUserTickets = async (req, res) => {
       ticket.status === "Hold"
     ).length;
     const rejected = tickets.filter(ticket => ticket.status === "Canceled").length;
-    
     return res.status(200).json({
       success: true,
       completed,
@@ -200,6 +199,24 @@ export const getUserTickets = async (req, res) => {
     console.error("Error in getCounts:", error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
+  }
+  export const assignTicket=async(req,res)=>{
+    try {
+      const { ticketID ,userId} = req.body;
+
+      const ticket = await Ticket.findById(ticketID);
+
+      if (!ticket) {
+        return res.status(404).json({ message: "Ticket not found" });
+            }
+      ticket.assignUser = userId;
+      ticket.status = "InProgress";
+      await ticket.save();
+  
+      return res.json({ message: "Ticket status updated to 'opened'", ticket });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
   export const getDepartmentTickets = async (req, res) => {
     try {
@@ -220,20 +237,21 @@ export const getUserTickets = async (req, res) => {
       }
   
       // Fetch tickets that belong to the same department as the user
-      const formattedTickets = await Ticket.find({ department: userDepartment });
+      const tickets = await Ticket.find({ department: userDepartment });
   
-      if (!formattedTickets || formattedTickets.length === 0) {
+      if (!tickets || tickets.length === 0) {
         return res.status(404).json({
           success: false,
           message: 'No tickets found for your department.',
         });
       }
-  
+   // Filter tickets where assigned user is empty/null/undefined
+   const formattedTickets = tickets.filter(ticket => !ticket.assignUser);
 
 
       return res.status(200).json({
         success: true,
-       formattedTickets,
+        formattedTickets,
       });
     } catch (error) {
       console.error('Error fetching department tickets:', error);
@@ -243,4 +261,36 @@ export const getUserTickets = async (req, res) => {
       });
     }
   };
+  export const getAssignTickets = async (req, res) => {
+    try {
+      const token = req.cookies.token;
+      if (!token) {
+      return res.status(401).json({ success: false, message: 'Unauthorized - no token provided' });
+      }
+  
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId=decoded.userId;
+    
+      // Fetch tickets from the database
+      
+      const formattedTickets = await Ticket.find({ assignUser: userId });
+      if (!formattedTickets || formattedTickets.length === 0) {
+      return res.status(404).json({ success: false, message: 'No tickets found for this user' });
+      }
+      const tickets = formattedTickets.filter(ticket => 
+        ticket.status === "Sent" || 
+        ticket.status === "Opened" || 
+        ticket.status === "InProgress" || 
+        ticket.status === "Hold"
+      );
+
+      return res.status(200).json({
+      success: true,
+      tickets,
+      });
+    } catch (error) {
+      console.error('Error fetching user tickets:', error);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    };
   

@@ -1,5 +1,5 @@
 import express from "express";
-import { predictPriority,getUserTickets,getAllTickets,deleteTicket,updateTicket,getCounts,getDepartmentTickets} from "../controllers/ticket.controller.js";
+import { predictPriority,getUserTickets,getAssignTickets,getAllTickets,deleteTicket,updateTicket,getCounts,getDepartmentTickets,assignTicket} from "../controllers/ticket.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import authorizeRole from "../middleware/authorizeRole.js";
 
@@ -13,4 +13,7 @@ router.get('/allTicket',verifyToken,authorizeRole("admin"),getAllTickets)
 router.delete('/:id',verifyToken,
 authorizeRole("admin"), deleteTicket)
 router.post("/update_status",verifyToken,updateTicket)
+router.post("/assign",verifyToken,assignTicket);
+router.get("/assign",getAssignTickets);
+
 export default router;

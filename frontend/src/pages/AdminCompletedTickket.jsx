@@ -3,29 +3,32 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 const API_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/ticket"
+    : "/ticket";
 
-function TicketHistory() {
+
+function TicketHistory({ refreshKey }) {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-  // Fetch tickets from the server
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await axios.get(`${API_URL}ticket/get`); // Adjust the endpoint as necessary
-        setTickets(response.data.tickets || []);
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
-      }
-    };
-
+  const fetchTickets = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/assign`); 
+      setTickets(response.data.tickets || []);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
+useEffect(() => {
     fetchTickets();
-  }, []);
+  }, [refreshKey]);
 
+  
   // Handle ticket click to show details in popup
-  const handleTicketClick = (ticket) => {
+  const handleTicketClick = (ticket,e) => {
+    e?.preventDefault();
     setSelectedTicket(ticket);
     setIsPopupVisible(true);
   };
@@ -35,7 +38,32 @@ function TicketHistory() {
     setIsPopupVisible(false);
     setSelectedTicket(null);
   };
-
+  const handleRejectTicket = async (ticket,e) => {
+    e?.preventDefault();
+    try {
+      setSelectedTicket(ticket);
+      await axios.post(`${API_URL}/update_status`, {
+        _id: ticket._id,
+        status: "Canceled",
+      });
+      await fetchTickets(); 
+    } catch (error) {
+      console.error("Error updating ticket status:", error);
+    }
+  };
+  const handleCompleteTicket = async (ticket,e) => {
+    e?.preventDefault();
+    try {
+      setSelectedTicket(ticket);
+      await axios.post(`${API_URL}/update_status`, {
+        _id: ticket._id,
+        status: "Resolved",
+      });
+      await fetchTickets(); 
+    } catch (error) {
+      console.error("Error updating ticket status:", error);
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -56,8 +84,7 @@ function TicketHistory() {
               {tickets.map((ticket) => (
                 <li
                   key={ticket.ticketID}
-                  className="p-4 bg-gray-700 rounded-lg shadow cursor-pointer hover:bg-gray-600"
-                  onClick={() => handleTicketClick(ticket)}
+                  className="p-4 bg-gray-700 rounded-lg shadow hover:bg-gray-600"
                 >
                   <h3 className="text-lg font-semibold">
                     {ticket.ticketHeader}
@@ -66,6 +93,32 @@ function TicketHistory() {
                     Status: {ticket.status}
                   </p>
                   <p className="text-sm text-gray-400">ID: {ticket.ticketID}</p>
+                  <div className="grid grid-cols-3 gap-2 mt-2">
+                  <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => handleTicketClick(ticket,e)}
+                      className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      Show
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => handleRejectTicket(ticket,e)}
+                      className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      Reject
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => handleCompleteTicket(ticket,e)}
+                      className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                    >
+                      Complete
+                    </motion.button>
+                  </div>
                 </li>
               ))}
             </ul>

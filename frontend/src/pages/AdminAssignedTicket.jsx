@@ -7,61 +7,64 @@ const API_URL =
     ? "http://localhost:3000/ticket"
     : "/ticket";
 
-function AdminAssignedTicket() {
+function AdminAssignedTicket({ onAssign }) {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const { user } = useAuthStore();
 
-  // Fetch tickets from the server
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-  
-        const response = await axios.get(`${API_URL}/get_department_tickets`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-  
-        setTickets(response.data.formattedTickets || []);
-      } catch (error) {
-        console.error("Error fetching department-specific tickets:", error);
-      };
+  const fetchTickets = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/get_department_tickets`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setTickets(response.data.formattedTickets || []);
+    } catch (error) {
+      console.error("Error fetching department-specific tickets:", error);
     }
-    fetchTickets();
+  };
+  
+  useEffect(() => {
+    fetchTickets(); // call it once when component loads
   }, []);
-
+  
   const closePopup = () => {
     setIsPopupVisible(false);
     setSelectedTicket(null);
   };
 
-  const handleOpenTicket = async (ticket) => {
+  const handleOpenTicket = async (ticket,e) => {
+    e?.preventDefault();
     try {
       setSelectedTicket(ticket);
       setIsPopupVisible(true);
       await axios.post(`${API_URL}/update_status`, {
         _id: ticket._id,
-        status: "opened",
+        status: "Opened",
       });
-      console.log(`Ticket ${ticket.ticketID} status updated to opened.`);
+      await fetchTickets(); 
     } catch (error) {
       console.error("Error updating ticket status:", error);
     }
   };
 
-  const handleAssignTicket = async (ticket) => {
+  const handleAssignTicket = async (ticket,e) => {
+    e?.preventDefault();
     try {
       const userEmail = user.email;
+      const userId=user._id;
       await axios.post(`${API_URL}/assign`, {
-        ticketID: ticket.ticketID,
+        ticketID: ticket._id,
         email: userEmail,
+        userId:userId
       });
-      console.log(`Ticket ${ticket.ticketID} assigned to ${userEmail}.`);
+      if (onAssign) onAssign();
       setTickets((prevTickets) =>
         prevTickets.map((t) =>
           t.ticketID === ticket.ticketID ? { ...t, assignedTo: userEmail } : t
         )
       );
+      await fetchTickets(); // 🔁 Refresh list
     } catch (error) {
       console.error("Error assigning ticket:", error);
     }
@@ -100,7 +103,7 @@ function AdminAssignedTicket() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleOpenTicket(ticket)}
+                      onClick={(e) => handleOpenTicket(ticket,e)}
                       className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
                     >
                       Show
@@ -108,7 +111,7 @@ function AdminAssignedTicket() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleAssignTicket(ticket)}
+                      onClick={(e) => handleAssignTicket(ticket,e)}
                       className="px-4 py-3 font-bold text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
                     >
                       Assign for me
