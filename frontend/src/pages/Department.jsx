@@ -143,12 +143,12 @@ function Department() {
       >
         {/* Add Department and Search Field */}
         <div className="flex items-center px-4 mt-4 space-x-4">
-          <button
+          {/* <button
             onClick={handleAddDepartment}
             className="px-4 py-2 text-gray-300 bg-gray-700 rounded hover:bg-green-600"
           >
             Add Department
-          </button>
+          </button> */}
           <input
             type="text"
             value={searchTerm}

@@ -5,7 +5,7 @@ import axios from "axios";
 const API_URL =
   import.meta.env.MODE === "development" ? "http://localhost:3000/" : "/";
 
-function TicketHistory() {
+function TicketHistory({refreshKey}) {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -22,7 +22,7 @@ function TicketHistory() {
     };
 
     fetchTickets();
-  }, []);
+  }, [refreshKey]);
 
   // Handle ticket click to show details in popup
   const handleTicketClick = (ticket) => {
@@ -93,6 +93,9 @@ function TicketHistory() {
             </p>
             <p className="mb-2 text-gray-400">
               <strong>Priority:</strong> {selectedTicket.prediction}
+            </p>
+            <p className="mb-2 text-gray-400">
+              <strong>Department:</strong> {selectedTicket.department}
             </p>
             <p className="mb-2 text-gray-400">
               <strong>Message:</strong> {selectedTicket.text}

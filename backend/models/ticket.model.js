@@ -6,6 +6,7 @@ const TicketSchema = new mongoose.Schema({
   userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   text: { type: String, required: true },
   email: { type: String, required: true },
+  assignUser:{type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   ticketHeader: { type: String },
   status:  {type:String,default:'Sent',enum:['Sent','Opened','InProgress','Hold','Resolved','Canceled']},
   prediction: { type: String, required: true },

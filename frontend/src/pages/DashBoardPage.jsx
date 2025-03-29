@@ -67,7 +67,9 @@ const DashBoardPage = () => {
               </div>
 
               <div className="flex items-center justify-center p-6 text-black rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-blue-500 hover:shadow-2xl">
-                <h3 className="text-lg font-bold">Contact Feature</h3>
+              <h3 className="text-lg font-bold">
+                  All Tickets: {ticketCounts.rejected+ticketCounts.completed+ticketCounts.pending}
+                </h3>
               </div>
             </div>
           </div>

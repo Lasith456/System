@@ -2,7 +2,15 @@ import Navbar from "../components/NavigationBar";
 import AdminAssignedTicket from "./AdminAssignedTicket";
 import AdminCompletedTicket from "./AdminCompletedTickket";
 import { motion } from "framer-motion";
+import { useState } from "react";
+
 function TicketPage() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const triggerRefresh = () => {
+    setRefreshKey((prev) => prev + 1); // increment triggers useEffect
+  };
+
   return (
     <div>
       <Navbar />
@@ -15,12 +23,12 @@ function TicketPage() {
         <div className="flex w-full h-full space-x-4">
           {/* Column 1 */}
           <div className="flex flex-col items-center justify-center w-1/2 p-6 rounded-xl">
-            <AdminAssignedTicket />
+            <AdminAssignedTicket onAssign={triggerRefresh} />
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col items-center justify-center w-1/2 p-6 rounded-xl">
-            <AdminCompletedTicket />
+            <AdminCompletedTicket refreshKey={refreshKey}/>
           </div>
         </div>
       </motion.div>

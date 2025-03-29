@@ -6,7 +6,7 @@ import { useAuthStore } from "../store/authStore";
 import { useTicketStore } from "../store/ticketStore";
 import { motion } from "framer-motion";
 
-const TicketForm = () => {
+const TicketForm = ({ onTicketAdded }) => {
   const { user } = useAuthStore();
   const [ticket, setTicket] = useState("");
   const [ticketHeader, setTicketHeader] = useState("");
@@ -14,8 +14,16 @@ const TicketForm = () => {
   const { predict, isLoading, error } = useTicketStore();
   const submitTicket = async (e) => {
     e.preventDefault();
-    await predict(ticket, user.email, ticketHeader);
+    try {
+      await predict(ticket, user.email, ticketHeader);
+      setTicket("");
+      setTicketHeader("");
+      if (onTicketAdded) onTicketAdded();
+    } catch (err) {
+      console.error("Submit ticket error:", err);
+    }
   };
+  
 
   return (
     <motion.div
@@ -29,18 +37,22 @@ const TicketForm = () => {
           Add New Ticket
         </h2>
         <form onSubmit={submitTicket}>
-          <Input
-            icon={Mail}
-            type="text"
-            placeholder="Enter Your Ticket Subject"
-            onChange={(e) => setTicketHeader(e.target.value)}
-          />
-          <TextArea
-            icon={Mail}
-            rows={5}
-            placeholder="Enter Your Ticket Description"
-            onChange={(e) => setTicket(e.target.value)}
-          />
+        <Input
+          icon={Mail}
+          type="text"
+          placeholder="Enter Your Ticket Subject"
+          value={ticketHeader}
+          onChange={(e) => setTicketHeader(e.target.value)}
+        />
+
+        <TextArea
+          icon={Mail}
+          rows={5}
+          placeholder="Enter Your Ticket Description"
+          value={ticket}
+          onChange={(e) => setTicket(e.target.value)}
+        />
+
           {error && <p className="mb-2 font-semibold text-red-500">{error}</p>}
 
           <motion.button
