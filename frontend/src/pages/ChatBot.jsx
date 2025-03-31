@@ -22,7 +22,7 @@ const Chatbot=({setChatbotOpen})=>{
             body: JSON.stringify({ contents: history }),
         };
         try {
-            const response = await fetch(import.meta.env.VITE_CHATBOTAPI_URL, requestOptions); //Corrected to VITE_
+            const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=AIzaSyCEG3rd5x3ldXztn73Mcq_G9gLKKU_M3Rg", requestOptions); //Corrected to VITE_
             if (!response.ok) {
                 const errorText = await response.text(); // Get the error text
                 throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
