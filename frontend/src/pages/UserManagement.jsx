@@ -181,41 +181,41 @@ function UserManagement() {
                 </li>
               ))}
             </ul>
-        {totalPages > 1 && (
-  <div className="flex justify-center mt-4 space-x-2">
-    <button
-      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-      disabled={currentPage === 1}
-      className="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-500 disabled:opacity-50"
-    >
-      Prev
-    </button>
-
-    {[...Array(totalPages)].map((_, index) => (
-      <button
-        key={index}
-        onClick={() => setCurrentPage(index + 1)}
-        className={`px-3 py-1 text-sm rounded ${
-          currentPage === index + 1
-            ? "bg-blue-600 text-white"
-            : "bg-gray-600 text-white hover:bg-gray-500"
-        }`}
-      >
-        {index + 1}
-      </button>
-    ))}
-
-    <button
-      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-      disabled={currentPage === totalPages}
-      className="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-500 disabled:opacity-50"
-    >
-      Next
-    </button>
-  </div>
-)}
-
-          )}
+        )}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-4 space-x-2">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-500 disabled:opacity-50"
+                >
+                  Prev
+                </button>
+            
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPage(index + 1)}
+                    className={`px-3 py-1 text-sm rounded ${
+                      currentPage === index + 1
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-600 text-white hover:bg-gray-500"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+            
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-500 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          
         </div>
       </motion.div>
 
