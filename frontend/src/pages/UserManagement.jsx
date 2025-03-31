@@ -20,7 +20,7 @@ function UserManagement() {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 4;
+  const usersPerPage = 6;
 
   useEffect(() => {
     fetchUsers();
