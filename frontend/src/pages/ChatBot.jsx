@@ -45,7 +45,7 @@ const Chatbot=({setChatbotOpen})=>{
                     <div className="header-info">
                         <ChatbotIcon/>
                         <h2 className="logo-text">
-                            SmartUni Bot
+                        UniLink Bot
                         </h2>
                     </div>
                     <button className="material-symbols-rounded"  onClick={() => setChatbotOpen(false)}>keyboard_arrow_down</button>
