@@ -17,7 +17,7 @@ const HomePage = () => {
         transition={{ duration: 0.6 }}
         className="text-4xl font-extrabold text-center text-emerald-400 sm:text-5xl"
       >
-        Welcome to SMARTUNI 🎓
+        Welcome to UniLink 🎓
       </motion.h1>
 
       {/* Subtitle */}

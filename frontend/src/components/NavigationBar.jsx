@@ -13,7 +13,7 @@ function Navbar() {
       transition={{ duration: 0.5 }}
       className="fixed flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 shadow-xl top-4 left-4 right-4 backdrop-filter backdrop-blur-xl rounded-2xl"
     >
-      <div className="text-xl font-bold text-white">SmartUNI</div>
+      <div className="text-xl font-bold text-white">UniLink</div>
 
       <nav className="flex space-x-6">
         <a href="/dashboard" className="text-white hover:text-gray-300">

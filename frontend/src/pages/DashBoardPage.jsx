@@ -42,7 +42,7 @@ const DashBoardPage = () => {
         {" "}
         <div>
           <h2 className="mb-6 text-4xl font-bold text-center text-white">
-            Welcome to the <span className="text-green-400">SmartUNI</span>
+            Welcome to the <span className="text-green-400">UniLink</span>
           </h2>{" "}
         </div>
         <div className="p-8">

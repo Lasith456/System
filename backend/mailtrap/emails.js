@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 // Sender information
 const sender = {
   email: "smartuni@navicodes.work",
-  name: "SmartUNI",
+  name: "UniLink",
 };
 
 // Send Verification Email
